@@ -2,7 +2,7 @@ package io.canvasmc.discord.commands;
 
 import dev.jsinco.discord.framework.commands.CommandModule;
 import dev.jsinco.discord.framework.commands.DiscordCommand;
-import io.canvasmc.discord.Project;
+import io.canvasmc.discord.models.Project;
 import io.canvasmc.discord.util.OptionUtil;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
