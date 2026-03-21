@@ -13,11 +13,8 @@ import java.util.List;
 @DiscordCommand(name = "project", description = "Get information about a project")
 public class ProjectCommand implements CommandModule {
 
-    private static final String CANVAS_LOGO = "https://avatars.githubusercontent.com/u/147121996?s=200&v=4";
-
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        // not null -- change this to org.jspecify
         String projectString = OptionUtil.getOption(event.getOption("project"), OptionType.STRING);
 
         Project project = Project.get(projectString);

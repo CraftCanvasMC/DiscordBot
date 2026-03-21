@@ -6,6 +6,7 @@
  */
 plugins {
     java
+    application
     id("io.freefair.lombok") version "9.2.0"
     id("com.gradleup.shadow") version "9.4.0"
 }
@@ -33,4 +34,29 @@ dependencies {
 
     // Config
     implementation("eu.okaeri:okaeri-configs-yaml-snakeyaml:5.0.5")
+
+    implementation("org.jspecify:jspecify:1.0.0")
+}
+
+application {
+    mainClass.set("io.canvasmc.discord.Main")
+}
+
+
+tasks {
+    shadowJar {
+        dependencies {
+            // Just include everything, standalone application.
+        }
+        archiveVersion.set("")
+        archiveClassifier.set("")
+    }
+
+    jar {
+        enabled = false // shadow
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
 }

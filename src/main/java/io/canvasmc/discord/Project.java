@@ -29,8 +29,15 @@ public record Project(String name,
             .color("#2596be")
             .build();
 
-    // TODO: Horizon
-
+    public static final Project HORIZON = Project.builder()
+            .name("Horizon")
+            .description("Horizon is a mixin wrapper for PaperMC servers and forks, expanding plugin capabilities to allow for further customization and enhancements.")
+            .website("https://docs.canvasmc.io/horizon/introduction")
+            .documentation("https://docs.canvasmc.io/horizon/introduction")
+            .github("https://github.com/CraftCanvasMC/Horizon")
+            .logo("https://github.com/CraftCanvasMC/Horizon/raw/main/assets/horizon_logo.png")
+            .color("#ffc606")
+            .build();
 
     public EmbedBuilder embed() {
         EmbedBuilder builder = new EmbedBuilder();
