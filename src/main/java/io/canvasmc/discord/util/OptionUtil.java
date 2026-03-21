@@ -1,5 +1,6 @@
 package io.canvasmc.discord.util;
 
+import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -12,7 +13,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class OptionUtil {
+@NoArgsConstructor
+public final class OptionUtil {
 
     @Nullable
     public static <T> T getOption(OptionMapping optionMapping, OptionType optionType) {
