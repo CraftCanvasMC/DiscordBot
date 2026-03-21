@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Builder
 @AllArgsConstructor
-public class Project extends FieldRegistry<Project> implements EmbedModel {
+public class Project extends FieldRegistry implements EmbedModel {
 
     public static final Project CANVAS = Project.builder()
             .name("Canvas")
@@ -18,14 +18,27 @@ public class Project extends FieldRegistry<Project> implements EmbedModel {
             .website("https://canvasmc.io")
             .documentation("https://docs.canvasmc.io/canvas/introduction")
             .github("https://github.com/CraftCanvasMC/Canvas")
+            .logo("https://avatars.githubusercontent.com/u/147121996?s=200&v=4")
             .color("#2596be")
             .build();
+
+    public static final Project HORIZON = Project.builder()
+            .name("Horizon")
+            .description("Horizon is a mixin wrapper for PaperMC servers and forks, expanding plugin capabilities to allow for further customization and enhancements.")
+            .website("https://docs.canvasmc.io/horizon/introduction")
+            .documentation("https://docs.canvasmc.io/horizon/introduction")
+            .github("https://github.com/CraftCanvasMC/Horizon")
+            .logo("https://github.com/CraftCanvasMC/Horizon/raw/main/assets/horizon_logo.png")
+            .color("#ffc606")
+            .build();
+
 
     private final String name;
     private final String description;
     private final String website;
     private final String documentation;
     private final String github;
+    private final String logo;
     private final String color;
 
     @Override

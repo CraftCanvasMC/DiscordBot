@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class FieldRegistry<T extends FieldRegistry<T>> {
+public abstract class FieldRegistry {
 
     private static final Map<Class<?>, Map<String, ?>> REGISTRY = new LinkedHashMap<>();
 
@@ -30,15 +30,15 @@ public abstract class FieldRegistry<T extends FieldRegistry<T>> {
         });
     }
 
-    public static <T extends FieldRegistry<T>> T get(Class<T> clazz, String key) {
+    public static <T extends FieldRegistry> T get(Class<T> clazz, String key) {
         return registryFor(clazz).get(key);
     }
 
-    public static <T extends FieldRegistry<T>> Set<String> keys(Class<T> clazz) {
+    public static <T extends FieldRegistry> Set<String> keys(Class<T> clazz) {
         return registryFor(clazz).keySet();
     }
 
-    public static <T extends FieldRegistry<T>> Collection<T> values(Class<T> clazz) {
+    public static <T extends FieldRegistry> Collection<T> values(Class<T> clazz) {
         return registryFor(clazz).values();
     }
 }
