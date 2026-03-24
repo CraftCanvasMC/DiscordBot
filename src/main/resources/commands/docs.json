@@ -1,4 +1,32 @@
 {
   "name": "docs",
-  "description": "Get a link to the CanvasMC documentation"
+  "description": "Search CanvasMC documentation by keyword",
+  "options": [
+    {
+      "name": "project",
+      "description": "Which docs project to search",
+      "type": 3,
+      "required": false,
+      "choices": [
+        {
+          "name": "Canvas",
+          "value": "canvas"
+        },
+        {
+          "name": "Horizon",
+          "value": "horizon"
+        },
+        {
+          "name": "All",
+          "value": "all"
+        }
+      ]
+    },
+    {
+      "name": "keyword",
+      "description": "Keyword or phrase to search for",
+      "type": 3,
+      "required": false
+    }
+  ]
 }

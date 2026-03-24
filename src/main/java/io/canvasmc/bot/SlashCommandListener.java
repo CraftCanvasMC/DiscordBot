@@ -8,12 +8,15 @@ import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.core.spec.MessageCreateFields;
 import io.canvasmc.bot.model.Faq;
 import io.canvasmc.bot.model.Project;
+import io.canvasmc.bot.util.DocsSearchService;
 import io.canvasmc.bot.util.Embeds;
 import reactor.core.publisher.Mono;
 
 import java.io.InputStream;
+import java.util.List;
 
 public class SlashCommandListener {
+    private final DocsSearchService docsSearchService = DocsSearchService.getInstance();
 
     public Mono<Void> handle(ChatInputInteractionEvent event) {
         return switch (event.getCommandName()) {
@@ -62,8 +65,47 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleDocs(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.canvas("CanvasMC Documentation")
-                .description("You can find our documentation at https://docs.canvasmc.io/")
+        String project = getOption(event, "project");
+        String keyword = getOption(event, "keyword");
+
+        if (keyword == null || keyword.isBlank()) {
+            return reply(event, Embeds.canvas("CanvasMC Documentation")
+                    .description("You can find our documentation at https://docs.canvasmc.io/")
+                    .build());
+        }
+
+        DocsSearchService.SearchResult result = docsSearchService.search(project, keyword, 6);
+        if (result.state() == DocsSearchService.State.ERROR) {
+            return event.reply(result.message()).withEphemeral(true);
+        }
+        if (result.state() == DocsSearchService.State.INDEXING) {
+            return event.reply(result.message()).withEphemeral(true);
+        }
+
+        List<DocsSearchService.DocHit> hits = result.hits();
+        if (hits.isEmpty()) {
+            String projectLabel = project == null || project.isBlank() ? "all" : project;
+            return reply(event, Embeds.canvas("CanvasMC Docs Search")
+                    .description("No results found for **" + keyword + "** in **" + projectLabel + "** docs.")
+                    .addField("Browse Docs", "https://docs.canvasmc.io/", false)
+                    .build());
+        }
+
+        StringBuilder links = new StringBuilder();
+        for (int i = 0; i < hits.size(); i++) {
+            DocsSearchService.DocHit hit = hits.get(i);
+            links.append(i + 1)
+                    .append(". [")
+                    .append(hit.title())
+                    .append("](")
+                    .append(hit.url())
+                    .append(")\n");
+        }
+
+        return reply(event, Embeds.canvas("CanvasMC Docs Search")
+                .description("Top matches for **" + keyword + "**")
+                .addField("Results", links.toString().trim(), false)
+                .addField("Indexed Pages", String.valueOf(result.indexedPages()), true)
                 .build());
     }
 
