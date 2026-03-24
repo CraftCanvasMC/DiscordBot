@@ -10,10 +10,10 @@ public enum Faq {
     SCHEDULER("Canvas Schedulers", """
             Canvas supports multiple region schedulers, each with different trade-offs:
 
-            **[EDF](https://docs.canvasmc.io/canvas/scheduler/edf/)** — Folia's default scheduler; most stable and reliable, but least performant.
-            **[Work Stealing](https://docs.canvasmc.io/canvas/scheduler/work-stealing/)** — Steals overdue tasks between threads with NUMA-aware scheduling on Linux. Disclaimer: ATP work stealing has task loss issues.
-            **[Affinity](https://docs.canvasmc.io/canvas/scheduler/affinity/)** — Canvas's recommended scheduler; significantly improves MSPT/TPS via thread affinity and work stealing.
-            **[Beta](https://docs.canvasmc.io/canvas/scheduler/beta-scheduler/)** — Deprecated experimental scheduler by SpottedLeaf; unstable and not recommended for use."""),
+            **[EDF](https://docs.canvasmc.io/canvas/scheduler/edf/)** - Folia's default scheduler; most stable and reliable, but least performant.
+            **[Work Stealing](https://docs.canvasmc.io/canvas/scheduler/work-stealing/)** - Steals overdue tasks between threads with NUMA-aware scheduling on Linux. Disclaimer: ATP work stealing has task loss issues.
+            **[Affinity](https://docs.canvasmc.io/canvas/scheduler/affinity/)** - Canvas's recommended scheduler; significantly improves MSPT/TPS via thread affinity and work stealing.
+            **[Beta](https://docs.canvasmc.io/canvas/scheduler/beta-scheduler/)** - Deprecated experimental scheduler by SpottedLeaf; unstable and not recommended for use."""),
 
     SPARKREPORT("Spark Profiler Report Needed", """
             To help us diagnose your performance issue, please provide a **Spark profiler report**.
@@ -37,7 +37,7 @@ public enum Faq {
             1. Upload your `latest.log` file to [mclo.gs](https://mclo.gs/) or [paste.gg](https://paste.gg/)
             2. Share the generated link here
             
-            > **Do NOT** paste raw logs directly in chat — always use a paste service!""");
+            > **Do NOT** paste raw logs directly in chat - always use a paste service!""");
 
     private final String title;
     private final String description;
