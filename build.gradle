@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'io.canvasmc'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.discord4j:discord4j-core:3.3.1'
+    implementation 'ch.qos.logback:logback-classic:1.5.6'
+}
+
+application {
+    mainClass = 'io.canvasmc.bot.CanvasBot'
+}

@@ -1,0 +1,14 @@
+.env
+.gradle/
+build/
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+out/
+bin/
+.DS_Store
+Thumbs.db
+gradle/wrapper/gradle-wrapper.jar

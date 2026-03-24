@@ -1,13 +1,4 @@
-/website - links to website
-/project <project> - basically just describes the project and includes a download link and/or ref link
-/docs - links to docs page
-/foliaspread - the folia spread image thingie
-/git - links to the org github
+For logs:
+use pastes.dev on dev channels and mclo.gs on help channels and auto upload logs pasted on the discord itself.
 
-think of things that we commonly say a lot when offering support, like provide us with spark reports, or give us logs, etc
-
-also maybe like commands for each scheduler that will point to the docs page of each scheduler in the docs page -- docs pages will be provided soon
-
-command linking to the optimization guide i(dueris) will make for the docs page
-
-idk ask more ideas in the org GC or in the discord server or something
+Docs search command

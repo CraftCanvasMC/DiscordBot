@@ -1,0 +1,22 @@
+{
+  "name": "project",
+  "description": "Get information about a CanvasMC project",
+  "options": [
+    {
+      "name": "project",
+      "description": "The project name (e.g. canvas, horizon)",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Canvas",
+          "value": "canvas"
+        },
+        {
+          "name": "Horizon",
+          "value": "horizon"
+        }
+      ]
+    }
+  ]
+}

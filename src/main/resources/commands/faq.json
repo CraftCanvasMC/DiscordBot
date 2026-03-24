@@ -1,0 +1,36 @@
+{
+  "name": "faq",
+  "description": "Frequently asked questions and common resources",
+  "options": [
+    {
+      "name": "type",
+      "description": "The FAQ topic",
+      "type": 3,
+      "required": true,
+      "choices": [
+        {
+          "name": "Folia Spread",
+          "value": "FOLIASPREAD"
+        },
+        {
+          "name": "Scheduler",
+          "value": "SCHEDULER"
+        },
+        {
+          "name": "Spark Report",
+          "value": "SPARKREPORT"
+        },
+        {
+          "name": "Logs",
+          "value": "LOGS"
+        }
+      ]
+    },
+    {
+      "name": "for_user",
+      "description": "The user this FAQ is directed at",
+      "type": 6,
+      "required": false
+    }
+  ]
+}
