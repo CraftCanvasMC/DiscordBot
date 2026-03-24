@@ -13,3 +13,12 @@ The official Discord bot for [CanvasMC](https://github.com/CraftCanvasMC), built
 | `/git` | Links to the CraftCanvasMC GitHub organization |
 | `/faq <type> [for_user]` | FAQs and common resources (Folia Spread, Scheduler, Spark Report, Logs) |
 | `/optimizationguide` | Links to the server optimization guide |
+
+## Building and running
+
+Prereq - Java 21
+
+```bash
+./gradlew clean build
+./gradlew run
+```
