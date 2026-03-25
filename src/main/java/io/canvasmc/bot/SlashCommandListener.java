@@ -1,13 +1,17 @@
 package io.canvasmc.bot;
 
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
+import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.object.command.ApplicationCommandInteractionOption;
 import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
+import discord4j.core.object.component.ActionRow;
+import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.core.spec.MessageCreateFields;
 import io.canvasmc.bot.model.Faq;
 import io.canvasmc.bot.model.Project;
+import io.canvasmc.bot.util.DownloadService;
 import io.canvasmc.bot.util.DocsSearchService;
 import io.canvasmc.bot.util.Embeds;
 import reactor.core.publisher.Mono;
@@ -17,6 +21,7 @@ import java.util.List;
 
 public class SlashCommandListener {
     private final DocsSearchService docsSearchService = DocsSearchService.getInstance();
+    private final DownloadService downloadService = DownloadService.getInstance();
 
     public Mono<Void> handle(ChatInputInteractionEvent event) {
         return switch (event.getCommandName()) {
@@ -26,9 +31,40 @@ public class SlashCommandListener {
             case "docs" -> handleDocs(event);
             case "git" -> handleGit(event);
             case "faq" -> handleFaq(event);
+            case "download" -> handleDownload(event);
             case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
+    }
+
+    public Mono<Void> handleButton(ButtonInteractionEvent event) {
+        String customId = event.getCustomId();
+        if (!customId.startsWith("download:latest:")) {
+            return Mono.empty();
+        }
+
+        String project = customId.substring("download:latest:".length());
+        if (!isSupportedProject(project)) {
+            return event.reply("Unsupported project on this button.").withEphemeral(true);
+        }
+
+        return Mono.fromCallable(() -> downloadService.getLatestBuild(project))
+                .flatMap(latest -> {
+                    EmbedCreateSpec embed = Embeds.canvas("Latest " + toDisplayName(project) + " Build")
+                            .description("Use the button below to download the newest build.")
+                            .addField("Build", "#" + latest.buildNumber(), true)
+                            .addField("Channel", latest.channelVersion() == null ? "Unknown" : latest.channelVersion(), true)
+                            .build();
+
+                    InteractionApplicationCommandCallbackSpec reply = InteractionApplicationCommandCallbackSpec.builder()
+                            .ephemeral(true)
+                            .addEmbed(embed)
+                            .addComponent(ActionRow.of(Button.link(latest.downloadUrl(), "Download latest build")))
+                            .addFile(Embeds.logoAttachment())
+                            .build();
+                    return event.reply(reply);
+                })
+                .onErrorResume(error -> event.reply("I couldn't fetch the latest build right now.").withEphemeral(true));
     }
 
     private Mono<Void> reply(ChatInputInteractionEvent event, EmbedCreateSpec embed) {
@@ -165,5 +201,85 @@ public class SlashCommandListener {
                 .description("Check out our comprehensive server optimization guide to get the best performance out of your CanvasMC server.")
                 .addField("Link", "[Optimization Guide on Docs](https://docs.canvasmc.io)", false)
                 .build());
+    }
+
+    private Mono<Void> handleDownload(ChatInputInteractionEvent event) {
+        String project = getOption(event, "project");
+        String channel = getOption(event, "channel");
+
+        if ((project == null || project.isBlank()) && (channel == null || channel.isBlank())) {
+            InteractionApplicationCommandCallbackSpec reply = InteractionApplicationCommandCallbackSpec.builder()
+                    .addEmbed(Embeds.canvas("CanvasMC Downloads")
+                            .description("Open the downloads page to choose a project and build.")
+                            .build())
+                    .addComponent(ActionRow.of(Button.link(DownloadService.downloadsPage(null), "Open downloads page")))
+                    .addFile(Embeds.logoAttachment())
+                    .build();
+            return event.reply(reply);
+        }
+
+        if ((project == null || project.isBlank()) && channel != null && !channel.isBlank()) {
+            return event.reply("Please provide a project when using the channel filter.").withEphemeral(true);
+        }
+
+        if (!isSupportedProject(project)) {
+            return event.reply("Unknown project! Supported values: canvas, horizon.").withEphemeral(true);
+        }
+
+        String normalizedProject = project.trim().toLowerCase();
+        String trimmedChannel = channel == null ? "" : channel.trim();
+
+        return Mono.fromCallable(() -> downloadService.getBuilds(normalizedProject, trimmedChannel))
+                .flatMap(builds -> {
+                    List<DownloadService.BuildInfo> newest = builds.stream().limit(3).toList();
+
+                    if (!trimmedChannel.isBlank() && newest.isEmpty()) {
+                        return event.reply("No builds were found for channel '" + trimmedChannel + "'.").withEphemeral(true);
+                    }
+
+                    String title = trimmedChannel.isBlank()
+                            ? "Newest " + toDisplayName(normalizedProject) + " Builds"
+                            : "Newest " + toDisplayName(normalizedProject) + " Builds for " + trimmedChannel;
+
+                    EmbedCreateSpec.Builder embedBuilder = Embeds.canvas(title)
+                            .description(newest.isEmpty()
+                                    ? "No downloadable builds were found for this filter."
+                                    : "Showing the 3 newest downloadable builds.");
+
+                    for (DownloadService.BuildInfo build : newest) {
+                        embedBuilder.addField(
+                                "Build #" + build.buildNumber(),
+                                "Channel: " + (build.channelVersion() == null ? "Unknown" : build.channelVersion()) +
+                                        "\n[Download JAR](" + build.downloadUrl() + ")",
+                                false
+                        );
+                    }
+
+                    InteractionApplicationCommandCallbackSpec.Builder response = InteractionApplicationCommandCallbackSpec.builder()
+                            .addEmbed(embedBuilder.build())
+                            .addFile(Embeds.logoAttachment());
+
+                    if (!newest.isEmpty()) {
+                        List<Button> buildButtons = newest.stream()
+                                .map(b -> Button.link(b.downloadUrl(), "Build #" + b.buildNumber()))
+                                .toList();
+                        response.addComponent(ActionRow.of(buildButtons));
+                    }
+
+                    return event.reply(response.build());
+                })
+                .onErrorResume(error -> event.reply("I couldn't fetch builds from the downloads API right now.").withEphemeral(true));
+    }
+
+    private boolean isSupportedProject(String project) {
+        if (project == null || project.isBlank()) {
+            return false;
+        }
+        String normalized = project.trim().toLowerCase();
+        return normalized.equals("canvas") || normalized.equals("horizon");
+    }
+
+    private String toDisplayName(String project) {
+        return project.equalsIgnoreCase("horizon") ? "Horizon" : "Canvas";
     }
 }

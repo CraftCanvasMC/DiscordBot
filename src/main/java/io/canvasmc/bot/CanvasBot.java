@@ -2,6 +2,7 @@ package io.canvasmc.bot;
 
 import discord4j.core.DiscordClientBuilder;
 import discord4j.core.GatewayDiscordClient;
+import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.presence.ClientActivity;
 import discord4j.core.object.presence.ClientPresence;
@@ -42,6 +43,9 @@ public class CanvasBot {
         client.on(ChatInputInteractionEvent.class, listener::handle)
                 .then()
                 .subscribe();
+        client.on(ButtonInteractionEvent.class, listener::handleButton)
+            .then()
+            .subscribe();
 
         log.info("CanvasMC Bot is now online!");
         client.onDisconnect().block();
@@ -52,7 +56,7 @@ public class CanvasBot {
             List<String> files = List.of(
                     "about.json", "website.json", "project.json",
                     "docs.json", "git.json", "faq.json",
-                    "optimizationguide.json"
+                    "optimizationguide.json", "download.json"
             );
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(files);
             log.info("Registered all global slash commands");
