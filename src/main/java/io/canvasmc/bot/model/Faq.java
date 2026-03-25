@@ -37,7 +37,12 @@ public enum Faq {
             1. Upload your `latest.log` file to [mclo.gs](https://mclo.gs/) or [paste.gg](https://paste.gg/)
             2. Share the generated link here
             
-            > **Do NOT** paste raw logs directly in chat - always use a paste service!""");
+            > **Do NOT** paste raw logs directly in chat - always use a paste service!"""),
+
+    ETA("There Is No ETA", """
+            Updates to Canvas do not have any sort of estimate for when they release, ever. Any and all updates will arrive when they are ready, and the only thing to do is wait for them patiently along with everyone else.
+            
+            > **ETA means 'Estimated Time of Arrival'!""");
 
     private final String title;
     private final String description;

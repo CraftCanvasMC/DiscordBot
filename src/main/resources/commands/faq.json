@@ -23,6 +23,10 @@
         {
           "name": "Logs",
           "value": "LOGS"
+        },
+        {
+          "name": "ETA",
+          "value": "ETA"
         }
       ]
     },
