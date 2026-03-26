@@ -32,7 +32,7 @@ public class SlashCommandListener {
             case "git" -> handleGit(event);
             case "faq" -> handleFaq(event);
             case "download" -> handleDownload(event);
-            case "optimizationguide" -> handleOptimizationGuide(event);
+            //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
     }

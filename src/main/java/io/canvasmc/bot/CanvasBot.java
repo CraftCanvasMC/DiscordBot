@@ -56,7 +56,8 @@ public class CanvasBot {
             List<String> files = List.of(
                     "about.json", "website.json", "project.json",
                     "docs.json", "git.json", "faq.json",
-                    "optimizationguide.json", "download.json"
+                    //"optimizationguide.json",
+                    "download.json"
             );
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(files);
             log.info("Registered all global slash commands");
