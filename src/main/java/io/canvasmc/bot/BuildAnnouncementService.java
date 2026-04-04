@@ -110,7 +110,7 @@ public final class BuildAnnouncementService {
                 .addField("Download", "[Get build](" + build.downloadUrl() + ")", false)
                 .build();
 
-        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, mention, embed, build.downloadUrl()), sendAnnouncement(project.devChannelId, mention, embed, build.downloadUrl()))
+        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed, build.downloadUrl()), sendAnnouncement(project.devChannelId, mention, embed, build.downloadUrl()))
                 .doOnSuccess(ignored -> log.info("Announced {} build #{}", project.projectKey, build.buildNumber()))
                 .then();
     }
