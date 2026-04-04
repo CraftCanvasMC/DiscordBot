@@ -6,20 +6,19 @@ import discord4j.core.event.domain.interaction.ButtonInteractionEvent;
 import discord4j.core.event.domain.interaction.ChatInputInteractionEvent;
 import discord4j.core.object.presence.ClientActivity;
 import discord4j.core.object.presence.ClientPresence;
+import io.canvasmc.bot.util.EnvConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Properties;
+import java.io.IOException;
 
 public class CanvasBot {
     private static final Logger log = LoggerFactory.getLogger(CanvasBot.class);
 
     public static void main(String[] args) {
-        String token = loadToken();
+        EnvConfig env = EnvConfig.load();
+        String token = loadToken(env);
         if (token == null || token.isBlank() || token.equals("your-bot-token-here")) {
             log.error("BOT_TOKEN is not set! Create a .env file with BOT_TOKEN=<your-token>");
             System.exit(1);
@@ -47,6 +46,8 @@ public class CanvasBot {
             .then()
             .subscribe();
 
+        BuildAnnouncementService.create(client, env).start();
+
         log.info("CanvasMC Bot is now online!");
         client.onDisconnect().block();
     }
@@ -66,35 +67,12 @@ public class CanvasBot {
         }
     }
 
-    private static String loadToken() {
-        Path envFile = Path.of(".env");
-        if (Files.exists(envFile)) {
-            try {
-                Properties props = new Properties();
-                for (String line : Files.readAllLines(envFile)) {
-                    line = line.trim();
-                    if (line.isEmpty() || line.startsWith("#")) continue;
-                    int eq = line.indexOf('=');
-                    if (eq > 0) {
-                        props.setProperty(line.substring(0, eq).trim(), line.substring(eq + 1).trim());
-                    }
-                }
-                String token = props.getProperty("BOT_TOKEN");
-                if (token != null && !token.isBlank()) {
-                    log.info("Loaded BOT_TOKEN from .env file");
-                    return token;
-                }
-            } catch (IOException e) {
-                log.warn("Failed to read .env file", e);
-            }
+    private static String loadToken(EnvConfig env) {
+        String token = env.get("BOT_TOKEN");
+        if (token != null && !token.isBlank()) {
+            log.info("Loaded BOT_TOKEN from configuration");
+            return token;
         }
-
-        String env = System.getenv("BOT_TOKEN");
-        if (env != null && !env.isBlank()) {
-            log.info("Loaded BOT_TOKEN from environment variable");
-            return env;
-        }
-
         return null;
     }
 }
