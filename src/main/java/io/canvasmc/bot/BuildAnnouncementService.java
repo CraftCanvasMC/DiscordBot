@@ -102,15 +102,16 @@ public final class BuildAnnouncementService {
     private Mono<Void> announce(ProjectChannels project, DownloadService.BuildInfo build) {
         String displayName = project.projectKey.equals("horizon") ? "Horizon" : "Canvas";
         String mention = "<@&" + project.roleId + ">";
+        String trackedDownloadUrl = build.trackedDownloadUrl();
 
         EmbedCreateSpec embed = Embeds.canvas("New " + displayName + " Build Released")
                 .description("A new build is now available for download.")
                 .addField("Build", "#" + build.buildNumber(), true)
                 .addField("Channel", build.channelVersion() == null || build.channelVersion().isBlank() ? "Unknown" : build.channelVersion(), true)
-                .addField("Download", "[Get build](" + build.downloadUrl() + ")", false)
+                .addField("Download", "[Get build](" + trackedDownloadUrl + ")", false)
                 .build();
 
-        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed, build.downloadUrl()), sendAnnouncement(project.devChannelId, mention, embed, build.downloadUrl()))
+        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed, trackedDownloadUrl), sendAnnouncement(project.devChannelId, mention, embed, trackedDownloadUrl))
                 .doOnSuccess(ignored -> log.info("Announced {} build #{}", project.projectKey, build.buildNumber()))
                 .then();
     }

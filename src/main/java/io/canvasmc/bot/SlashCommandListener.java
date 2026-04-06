@@ -59,7 +59,7 @@ public class SlashCommandListener {
                     InteractionApplicationCommandCallbackSpec reply = InteractionApplicationCommandCallbackSpec.builder()
                             .ephemeral(true)
                             .addEmbed(embed)
-                            .addComponent(ActionRow.of(Button.link(latest.downloadUrl(), "Download latest build")))
+                            .addComponent(ActionRow.of(Button.link(latest.trackedDownloadUrl(), "Download latest build")))
                             .addFile(Embeds.logoAttachment())
                             .build();
                     return event.reply(reply);
@@ -250,7 +250,7 @@ public class SlashCommandListener {
                         embedBuilder.addField(
                                 "Build #" + build.buildNumber(),
                                 "Channel: " + (build.channelVersion() == null ? "Unknown" : build.channelVersion()) +
-                                        "\n[Download JAR](" + build.downloadUrl() + ")",
+                                        "\n[Download JAR](" + build.trackedDownloadUrl() + ")",
                                 false
                         );
                     }
@@ -261,7 +261,7 @@ public class SlashCommandListener {
 
                     if (!newest.isEmpty()) {
                         List<Button> buildButtons = newest.stream()
-                                .map(b -> Button.link(b.downloadUrl(), "Build #" + b.buildNumber()))
+                                .map(b -> Button.link(b.trackedDownloadUrl(), "Build #" + b.buildNumber()))
                                 .toList();
                         response.addComponent(ActionRow.of(buildButtons));
                     }

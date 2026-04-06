@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 public final class DownloadService {
+    private static final String SITE_BASE = "https://canvasmc.io";
     private static final String API_BASE = "https://canvasmc.io/api/v2";
 
     private static final DownloadService INSTANCE = new DownloadService();
@@ -79,13 +80,20 @@ public final class DownloadService {
 
     public static String downloadsPage(String project) {
         if (project == null || project.isBlank()) {
-            return "https://canvasmc.io/downloads";
+            return SITE_BASE + "/downloads";
         }
-        return "https://canvasmc.io/downloads/" + normalizeProject(project);
+        return SITE_BASE + "/downloads/" + normalizeProject(project);
     }
 
     public static String latestPage(String project) {
-        return "https://canvasmc.io/downloads/latest?project=" + URLEncoder.encode(normalizeProject(project), StandardCharsets.UTF_8);
+        return SITE_BASE + "/downloads/latest?project=" + URLEncoder.encode(normalizeProject(project), StandardCharsets.UTF_8);
+    }
+
+    public static String trackedDownloadUrl(String downloadUrl) {
+        if (downloadUrl == null || downloadUrl.isBlank()) {
+            return downloadsPage(null);
+        }
+        return API_BASE + "/download?url=" + URLEncoder.encode(downloadUrl, StandardCharsets.UTF_8);
     }
 
     public static String normalizeProject(String project) {
@@ -123,6 +131,10 @@ public final class DownloadService {
 
         public String downloadUrl() {
             return downloadUrl;
+        }
+
+        public String trackedDownloadUrl() {
+            return DownloadService.trackedDownloadUrl(downloadUrl);
         }
     }
 }
