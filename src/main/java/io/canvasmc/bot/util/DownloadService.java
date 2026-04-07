@@ -121,6 +121,9 @@ public final class DownloadService {
         @JsonProperty("downloadUrl")
         private String downloadUrl;
 
+        @JsonProperty("commits")
+        private List<Commit> commits;
+
         public int buildNumber() {
             return buildNumber;
         }
@@ -135,6 +138,25 @@ public final class DownloadService {
 
         public String trackedDownloadUrl() {
             return DownloadService.trackedDownloadUrl(downloadUrl);
+        }
+
+        public List<Commit> commits() {
+            return commits;
+        }
+
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public static class Commit {
+            @JsonProperty("message")
+            public String message;
+
+            @JsonProperty("author")
+            public String author;
+
+            @JsonProperty("hash")
+            public String hash;
+
+            @JsonProperty("extraDescription")
+            public String extraDescription;
         }
     }
 }
