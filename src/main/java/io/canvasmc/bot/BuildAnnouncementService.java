@@ -107,20 +107,16 @@ public final class BuildAnnouncementService {
 
         StringBuilder builder = new StringBuilder("A new build is now available for download.\n");
         if (!build.commits().isEmpty()) {
-            builder.append("```");
             List<DownloadService.BuildInfo.Commit> commits = build.commits();
-            for (int i = 0; i < commits.size(); i++) {
-                final DownloadService.BuildInfo.Commit commit = commits.get(i);
-                String extra = commit.extraDescription;
-                String wrappedExtra = wordWrap(extra, 35, "   | ");
-                builder.append(" - ").append(commit.message) // commit msg first
+            for (final DownloadService.BuildInfo.Commit commit : commits) {
+                // commit hash, then msg, then author
+                String pk = project.projectKey;
+                builder.append(" - [").append(commit.hash).append("](")
+                    .append("https://github.com/CraftCanvasMC/").append(pk.substring(0, 1).toUpperCase()).append(pk.substring(1)).append("/commit/").append(commit.hash)
+                    .append(")").append(" ")
+                    .append(commit.message) // commit msg
                     .append(" [").append(commit.author).append("]\n"); // then the author
-                // add commit description if present
-                if (commit.extraDescription != null && !commit.extraDescription.isEmpty()) {
-                    builder.append("   | ").append(wrappedExtra).append(i == (commits.size() - 1) ? "" : "\n");
-                }
             }
-            builder.append("```");
         } else builder.append("There is no changelog associated with this build");
         EmbedCreateSpec embed = Embeds.canvas("New " + displayName + " Build Released")
                 .description(builder.toString())
