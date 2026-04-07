@@ -10,6 +10,7 @@ import discord4j.core.spec.MessageCreateSpec;
 import io.canvasmc.bot.util.DownloadService;
 import io.canvasmc.bot.util.Embeds;
 import io.canvasmc.bot.util.EnvConfig;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.Disposable;
@@ -104,8 +105,25 @@ public final class BuildAnnouncementService {
         String mention = "<@&" + project.roleId + ">";
         String trackedDownloadUrl = build.trackedDownloadUrl();
 
+        StringBuilder builder = new StringBuilder("A new build is now available for download.\n");
+        if (!build.commits().isEmpty()) {
+            builder.append("```");
+            List<DownloadService.BuildInfo.Commit> commits = build.commits();
+            for (int i = 0; i < commits.size(); i++) {
+                final DownloadService.BuildInfo.Commit commit = commits.get(i);
+                String extra = commit.extraDescription;
+                String wrappedExtra = wordWrap(extra, 35, "   | ");
+                builder.append(" - ").append(commit.message) // commit msg first
+                    .append(" [").append(commit.author).append("]\n"); // then the author
+                // add commit description if present
+                if (commit.extraDescription != null && !commit.extraDescription.isEmpty()) {
+                    builder.append("   | ").append(wrappedExtra).append(i == (commits.size() - 1) ? "" : "\n");
+                }
+            }
+            builder.append("```");
+        } else builder.append("There is no changelog associated with this build");
         EmbedCreateSpec embed = Embeds.canvas("New " + displayName + " Build Released")
-                .description("A new build is now available for download.")
+                .description(builder.toString())
                 .addField("Build", "#" + build.buildNumber(), true)
                 .addField("Channel", build.channelVersion() == null || build.channelVersion().isBlank() ? "Unknown" : build.channelVersion(), true)
                 .addField("Download", "[Get build](" + trackedDownloadUrl + ")", false)
@@ -114,6 +132,33 @@ public final class BuildAnnouncementService {
         return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed, trackedDownloadUrl), sendAnnouncement(project.devChannelId, mention, embed, trackedDownloadUrl))
                 .doOnSuccess(ignored -> log.info("Announced {} build #{}", project.projectKey, build.buildNumber()))
                 .then();
+    }
+
+    private @NonNull String wordWrap(String text, int maxWidth, String indent) {
+        if (text == null || text.length() <= maxWidth) {
+            return text == null ? "" : text;
+        }
+
+        StringBuilder result = new StringBuilder();
+        String[] words = text.split("\\s+");
+        int lineLength = 0;
+
+        for (String word : words) {
+            if (lineLength == 0) {
+                result.append(word);
+                lineLength = word.length();
+            }
+            else if (lineLength + 1 + word.length() > maxWidth) {
+                result.append("\n").append(indent).append(word);
+                lineLength = word.length();
+            }
+            else {
+                result.append(" ").append(word);
+                lineLength += 1 + word.length();
+            }
+        }
+
+        return result.toString();
     }
 
     private Mono<Void> sendAnnouncement(String channelId, String mention, EmbedCreateSpec embed, String downloadUrl) {
