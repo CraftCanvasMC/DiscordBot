@@ -111,7 +111,7 @@ public final class BuildAnnouncementService {
             for (final DownloadService.BuildInfo.Commit commit : commits) {
                 // commit hash, then msg, then author
                 String pk = project.projectKey;
-                builder.append(" - [").append(commit.hash).append("](")
+                builder.append(" - [").append(commit.hash, 0, 5).append("](")
                     .append("https://github.com/CraftCanvasMC/").append(pk.substring(0, 1).toUpperCase()).append(pk.substring(1)).append("/commit/").append(commit.hash)
                     .append(")").append(" ")
                     .append(commit.message) // commit msg
