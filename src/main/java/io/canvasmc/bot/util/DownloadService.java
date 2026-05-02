@@ -65,6 +65,7 @@ public final class DownloadService {
         }
 
         return payload.builds.stream()
+                .filter(BuildInfo::isSuccessful)
                 .filter(build -> build.downloadUrl != null && !build.downloadUrl.isBlank())
                 .sorted(Comparator.comparingInt(BuildInfo::buildNumber).reversed())
                 .toList();
@@ -73,7 +74,7 @@ public final class DownloadService {
     public BuildInfo getLatestBuild(String project) throws IOException, InterruptedException {
         List<BuildInfo> builds = getBuilds(project, null);
         if (builds.isEmpty()) {
-            throw new IOException("No downloadable builds found");
+            throw new IOException("No successful downloadable builds found");
         }
         return builds.get(0);
     }
@@ -112,6 +113,9 @@ public final class DownloadService {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BuildInfo {
+        @JsonProperty("result")
+        private String result;
+
         @JsonProperty("buildNumber")
         private int buildNumber;
 
@@ -126,6 +130,10 @@ public final class DownloadService {
 
         public int buildNumber() {
             return buildNumber;
+        }
+
+        public boolean isSuccessful() {
+            return "SUCCESS".equalsIgnoreCase(result);
         }
 
         public String channelVersion() {
