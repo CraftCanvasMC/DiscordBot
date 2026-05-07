@@ -65,8 +65,6 @@ public final class DownloadService {
         }
 
         return payload.builds.stream()
-                .filter(BuildInfo::isSuccessful)
-                .filter(build -> build.downloadUrl != null && !build.downloadUrl.isBlank())
                 .sorted(Comparator.comparingInt(BuildInfo::buildNumber).reversed())
                 .toList();
     }

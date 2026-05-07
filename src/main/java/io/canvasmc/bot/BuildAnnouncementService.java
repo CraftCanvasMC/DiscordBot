@@ -27,7 +27,7 @@ public final class BuildAnnouncementService {
     private static final Logger log = LoggerFactory.getLogger(BuildAnnouncementService.class);
 
     private static final Duration START_DELAY = Duration.ofSeconds(20);
-    private static final Duration POLL_INTERVAL = Duration.ofMinutes(5);
+    private static final Duration POLL_INTERVAL = Duration.ofSeconds(60);
 
     private final GatewayDiscordClient client;
     private final DownloadService downloadService;
@@ -81,10 +81,6 @@ public final class BuildAnnouncementService {
     private Mono<Void> checkProject(ProjectChannels project) {
         return Mono.fromCallable(() -> downloadService.getLatestBuild(project.projectKey))
                 .flatMap(latest -> {
-                    if (!latest.isSuccessful() || latest.downloadUrl() == null) {
-                        return Mono.empty();
-                    }
-
                     Integer previous = lastSeenBuild.get(project.projectKey);
                     lastSeenBuild.put(project.projectKey, latest.buildNumber());
                     if (previous == null) {
@@ -107,7 +103,6 @@ public final class BuildAnnouncementService {
     private Mono<Void> announce(ProjectChannels project, DownloadService.BuildInfo build) {
         String displayName = project.projectKey.equals("horizon") ? "Horizon" : "Canvas";
         String mention = ""; // "<@&" + project.roleId + ">"; // temporarily disable
-        String trackedDownloadUrl = build.trackedDownloadUrl();
 
         StringBuilder builder = new StringBuilder("A new build is now available for download.\n");
         if (!build.commits().isEmpty()) {
@@ -126,10 +121,9 @@ public final class BuildAnnouncementService {
                 .description(builder.toString())
                 .addField("Build", "#" + build.buildNumber(), true)
                 .addField("Channel", build.channelVersion() == null || build.channelVersion().isBlank() ? "Unknown" : build.channelVersion(), true)
-                .addField("Download", "[Get build](" + trackedDownloadUrl + ")", false)
                 .build();
 
-        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed, trackedDownloadUrl), sendAnnouncement(project.devChannelId, mention, embed, trackedDownloadUrl))
+        return Mono.whenDelayError(sendAnnouncement(project.helpChannelId, "", embed), sendAnnouncement(project.devChannelId, mention, embed))
                 .doOnSuccess(ignored -> log.info("Announced {} build #{}", project.projectKey, build.buildNumber()))
                 .then();
     }
@@ -161,12 +155,11 @@ public final class BuildAnnouncementService {
         return result.toString();
     }
 
-    private Mono<Void> sendAnnouncement(String channelId, String mention, EmbedCreateSpec embed, String downloadUrl) {
+    private Mono<Void> sendAnnouncement(String channelId, String mention, EmbedCreateSpec embed) {
         MessageCreateSpec message = MessageCreateSpec.builder()
                 .content(mention)
                 .addEmbed(embed)
                 .addFile(Embeds.logoAttachment())
-                .addComponent(ActionRow.of(Button.link(downloadUrl, "Download build")))
                 .build();
 
         return Mono.defer(() -> client.getChannelById(Snowflake.of(channelId))
