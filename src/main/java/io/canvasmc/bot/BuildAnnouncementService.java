@@ -27,7 +27,7 @@ public final class BuildAnnouncementService {
     private static final Logger log = LoggerFactory.getLogger(BuildAnnouncementService.class);
 
     private static final Duration START_DELAY = Duration.ofSeconds(20);
-    private static final Duration POLL_INTERVAL = Duration.ofSeconds(45);
+    private static final Duration POLL_INTERVAL = Duration.ofMinutes(5);
 
     private final GatewayDiscordClient client;
     private final DownloadService downloadService;
@@ -81,7 +81,12 @@ public final class BuildAnnouncementService {
     private Mono<Void> checkProject(ProjectChannels project) {
         return Mono.fromCallable(() -> downloadService.getLatestBuild(project.projectKey))
                 .flatMap(latest -> {
-                    Integer previous = lastSeenBuild.putIfAbsent(project.projectKey, latest.buildNumber());
+                    if (!latest.isSuccessful() || latest.downloadUrl() == null) {
+                        return Mono.empty();
+                    }
+
+                    Integer previous = lastSeenBuild.get(project.projectKey);
+                    lastSeenBuild.put(project.projectKey, latest.buildNumber());
                     if (previous == null) {
                         log.info("Initialized {} build tracker at #{}", project.projectKey, latest.buildNumber());
                         return Mono.empty();
@@ -91,7 +96,6 @@ public final class BuildAnnouncementService {
                         return Mono.empty();
                     }
 
-                    lastSeenBuild.put(project.projectKey, latest.buildNumber());
                     return announce(project, latest);
                 })
                 .onErrorResume(error -> {
@@ -102,7 +106,7 @@ public final class BuildAnnouncementService {
 
     private Mono<Void> announce(ProjectChannels project, DownloadService.BuildInfo build) {
         String displayName = project.projectKey.equals("horizon") ? "Horizon" : "Canvas";
-        String mention = "<@&" + project.roleId + ">";
+        String mention = ""; // "<@&" + project.roleId + ">"; // temporarily disable
         String trackedDownloadUrl = build.trackedDownloadUrl();
 
         StringBuilder builder = new StringBuilder("A new build is now available for download.\n");

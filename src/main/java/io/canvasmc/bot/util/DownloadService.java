@@ -76,7 +76,7 @@ public final class DownloadService {
         if (builds.isEmpty()) {
             throw new IOException("No successful downloadable builds found");
         }
-        return builds.get(0);
+        return builds.getFirst();
     }
 
     public static String downloadsPage(String project) {
