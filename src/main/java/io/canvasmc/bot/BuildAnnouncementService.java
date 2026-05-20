@@ -102,7 +102,7 @@ public final class BuildAnnouncementService {
 
     private Mono<Void> announce(ProjectChannels project, DownloadService.BuildInfo build) {
         String displayName = project.projectKey.equals("horizon") ? "Horizon" : "Canvas";
-        String mention = ""; // "<@&" + project.roleId + ">"; // temporarily disable
+        String mention = "<@&" + project.roleId + ">";
 
         StringBuilder builder = new StringBuilder("A new build is now available for download.\n");
         if (!build.commits().isEmpty()) {
