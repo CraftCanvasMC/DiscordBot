@@ -108,11 +108,11 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleEta(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.generic("No ETA :bug:", 0xFC813F, "")
+        return reply(event, Embeds.generic("No ETA", 0xFC813F, ":bug:  ")
             .description("""
                 Canvas has no ETA(estimated time of arrival) for any Minecraft version updates. It will be worked on ASAP, and the server will be notified once builds become available on our downloads page.
                 """)
-            .build(), false);
+            .build());
     }
 
     private Mono<Void> handleSchedulers(ChatInputInteractionEvent event) {
@@ -126,7 +126,6 @@ public class SlashCommandListener {
                   scheduler: <EDF, WORK_STEALING, or AFFINITY>
                   ...
                 ```
-                
                 The `AFFINITY` scheduler is always recommended for Canvas users, as the `EDF` scheduler lacks optimization features, and the `WORK_STEALING` scheduler, while similar to the `AFFINITY` scheduler, has issues where tasks(regions) can be completely lost, causing major issues in the server. The `AFFINITY` scheduler is based off the `EDF` scheduler with multiple configurations to help boost performance.
                 """)
             .build(), false);
