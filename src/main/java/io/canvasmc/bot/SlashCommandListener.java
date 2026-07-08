@@ -33,6 +33,8 @@ public class SlashCommandListener {
             case "faq" -> handleFaq(event);
             case "download" -> handleDownload(event);
             case "unsupportedver" -> handleUnsupportedVer(event);
+            case "logs" -> handleLogs(event);
+            case "spark" -> handleSpark(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -88,12 +90,33 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleUnsupportedVer(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.urgent("You are running an unsupported version!")
+        return reply(event, Embeds.generic("You are running an unsupported version!", 0xFC523F, ":rotating_light:\t")
             .description("""
                 Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
-                \n
-                Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running
-                the **latest supported version**. You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
+                
+                Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running the **latest supported version**. You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
+                """)
+            .build());
+    }
+
+    private Mono<Void> handleSpark(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic("Please send a Spark report", 0xFCB03F, ":sparkles:\t")
+            .description("""
+                Please send a Spark report and send the link here. If this is a performance issue pertaining to a specific region, please add the following args to the end of your spark profiler command:
+                ```
+                --region <block x> <block z>
+                OR
+                --region <start block x> <start block z> <to block x> <to block z>
+                ```
+                Using tildas(`~`) works in placement of the block coords. If this is a global performance issue or not a performance issue, the `--region` argument can be left out.
+                """)
+            .build());
+    }
+
+    private Mono<Void> handleLogs(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic("You are running an unsupported version!", 0x3FFC8E, ":rotating_light:\t")
+            .description("""
+                In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
                 """)
             .build());
     }

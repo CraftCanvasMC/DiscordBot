@@ -23,11 +23,10 @@ public final class Embeds {
             .timestamp(Instant.now());
     }
 
-    public static EmbedCreateSpec.Builder urgent(String title) {
+    public static EmbedCreateSpec.Builder generic(String title, int color, String append) {
         return EmbedCreateSpec.builder()
-            .color(Color.of(0xFC523F))
-            .title(":rotating_light: " + title)
-            .footer("CanvasMC", LOGO)
+            .color(Color.of(color))
+            .title(append + title)
             .timestamp(Instant.now());
     }
 
