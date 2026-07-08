@@ -59,7 +59,7 @@ public class CanvasBot {
                     "docs.json", "git.json", "faq.json",
                     //"optimizationguide.json",
                     "download.json", "unsupportedver.json", "logs.json",
-                    "spark.json"
+                    "spark.json", "foliaspread.json"
             );
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(files);
             log.info("Registered all global slash commands");

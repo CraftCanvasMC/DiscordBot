@@ -9,10 +9,6 @@
       "required": true,
       "choices": [
         {
-          "name": "Folia Spread",
-          "value": "FOLIASPREAD"
-        },
-        {
           "name": "Scheduler",
           "value": "SCHEDULER"
         },

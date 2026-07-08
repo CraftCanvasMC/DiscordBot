@@ -4,9 +4,6 @@ import discord4j.core.spec.EmbedCreateSpec;
 import io.canvasmc.bot.util.Embeds;
 
 public enum Faq {
-    FOLIASPREAD("Folia Spread",
-            "Canvas will run best when players are spread out. Make sure your server's game mode encourages this behavior!"),
-
     SCHEDULER("Canvas Schedulers", """
             Canvas supports multiple region schedulers, each with different trade-offs:
 

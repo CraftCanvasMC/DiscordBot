@@ -36,6 +36,7 @@ public class SlashCommandListener {
             case "unsupportedver" -> handleUnsupportedVer(event);
             case "logs" -> handleLogs(event);
             case "spark" -> handleSpark(event);
+            case "foliaspread" -> handleFoliaSpread(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -121,11 +122,23 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleLogs(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.generic("Please Provide lLogs", 0x3FFC8E, "")
+        return reply(event, Embeds.generic("Please Provide Logs", 0x3FFC8E, "")
             .description("""
                 In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
                 """)
             .build(), false);
+    }
+
+    private Mono<Void> handleFoliaSpread(ChatInputInteractionEvent event) {
+        InputStream img = getClass().getClassLoader().getResourceAsStream("foliaspread.png");
+        if (img == null) {
+            return event.reply("Could not load the spread image.").withEphemeral(true);
+        }
+
+        InteractionApplicationCommandCallbackSpec.Builder reply = InteractionApplicationCommandCallbackSpec.builder()
+            .addFile(MessageCreateFields.File.of("foliaspread.png", img));
+
+        return event.reply(reply.build());
     }
 
     private Mono<Void> handleWebsite(ChatInputInteractionEvent event) {
@@ -204,29 +217,6 @@ public class SlashCommandListener {
                 .flatMap(ApplicationCommandInteractionOption::getValue)
                 .map(val -> "<@" + val.asSnowflake().asString() + "> ")
                 .orElse("");
-
-        if (faq == Faq.FOLIASPREAD) {
-            InputStream img = getClass().getClassLoader().getResourceAsStream("foliaspread.png");
-            if (img == null) {
-                return event.reply("Could not load the spread image.").withEphemeral(true);
-            }
-
-            EmbedCreateSpec embed = Embeds.canvas(faq.title())
-                    .description(faq.description())
-                    .image("attachment://foliaspread.png")
-                    .build();
-
-            InteractionApplicationCommandCallbackSpec.Builder reply = InteractionApplicationCommandCallbackSpec.builder()
-                    .addEmbed(embed)
-                    .addFile(Embeds.logoAttachment())
-                    .addFile(MessageCreateFields.File.of("foliaspread.png", img));
-
-            if (!mention.isEmpty()) {
-                reply.content(mention);
-            }
-
-            return event.reply(reply.build());
-        }
 
         InteractionApplicationCommandCallbackSpec.Builder reply = InteractionApplicationCommandCallbackSpec.builder()
                 .addEmbed(faq.toEmbed())
