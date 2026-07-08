@@ -16,11 +16,19 @@ public final class Embeds {
 
     public static EmbedCreateSpec.Builder canvas(String title) {
         return EmbedCreateSpec.builder()
-                .color(BRAND_COLOR)
-                .title(title)
-                .thumbnail(LOGO)
-                .footer("CanvasMC", LOGO)
-                .timestamp(Instant.now());
+            .color(BRAND_COLOR)
+            .title(title)
+            .thumbnail(LOGO)
+            .footer("CanvasMC", LOGO)
+            .timestamp(Instant.now());
+    }
+
+    public static EmbedCreateSpec.Builder urgent(String title) {
+        return EmbedCreateSpec.builder()
+            .color(Color.of(0xFC523F))
+            .title(":rotating_light: " + title)
+            .footer("CanvasMC", LOGO)
+            .timestamp(Instant.now());
     }
 
     public static MessageCreateFields.File logoAttachment() {

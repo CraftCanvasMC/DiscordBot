@@ -88,7 +88,7 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleUnsupportedVer(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.canvas("You are running an unsupported version!")
+        return reply(event, Embeds.urgent("You are running an unsupported version!")
             .description("""
                 Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
                 \n
