@@ -56,10 +56,10 @@ public class CanvasBot {
         try {
             List<String> files = List.of(
                     "about.json", "website.json", "project.json",
-                    "docs.json", "git.json", "faq.json",
+                    "docs.json", "git.json",
                     //"optimizationguide.json",
                     "download.json", "unsupportedver.json", "logs.json",
-                    "spark.json", "foliaspread.json"
+                    "spark.json", "foliaspread.json", "eta.json", "schedulers.json"
             );
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(files);
             log.info("Registered all global slash commands");

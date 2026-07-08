@@ -10,7 +10,6 @@ import discord4j.core.spec.EmbedCreateSpec;
 import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.core.spec.MessageCreateFields;
-import io.canvasmc.bot.model.Faq;
 import io.canvasmc.bot.model.Project;
 import io.canvasmc.bot.util.DownloadService;
 import io.canvasmc.bot.util.DocsSearchService;
@@ -31,12 +30,13 @@ public class SlashCommandListener {
             case "project" -> handleProject(event);
             case "docs" -> handleDocs(event);
             case "git" -> handleGit(event);
-            case "faq" -> handleFaq(event);
             case "download" -> handleDownload(event);
             case "unsupportedver" -> handleUnsupportedVer(event);
             case "logs" -> handleLogs(event);
             case "spark" -> handleSpark(event);
             case "foliaspread" -> handleFoliaSpread(event);
+            case "eta" -> handleEta(event);
+            case "schedulers" -> handleSchedulers(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -103,6 +103,29 @@ public class SlashCommandListener {
                 Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
                 
                 Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running the **latest supported version**. You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
+                """)
+            .build(), false);
+    }
+
+    private Mono<Void> handleEta(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic("No ETA :based:", 0xFC813F, "")
+            .description("""
+                Canvas has no ETA(estimated time of arrival) for any Minecraft version updates. It will be worked on ASAP, and the server will be notified once builds become available on our downloads page.
+                """)
+            .build(), false);
+    }
+
+    private Mono<Void> handleSchedulers(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic("CanvasMC/Folia Schedulers", 0xA9F4FC, "")
+            .description("""
+                Both Canvas and Folia provide different schedulers servers can configure and utilize to better optimize their server. Folia provides the `EDF` and `WORK_STEALING` schedulers, while Canvas provides the `AFFINITY` scheduler
+                The `AFFINITY` scheduler is always recommended for Canvas users, as the `EDF` scheduler lacks optimization features, and the `WORK_STEALING` scheduler, while similar to the `AFFINITY` scheduler, has issues where tasks(regions) can be completely lost, causing major issues in the server. The `AFFINITY` scheduler is based off the `EDF` scheduler with multiple configurations to help boost performance.
+                To change your scheduler implementation, modify your `paper-global.yml` file and adjust the `scheduler` option, like so:
+                ```yaml
+                threaded-regions:
+                  scheduler: <EDF, WORK_STEALING, or AFFINITY>
+                  ...
+                ```
                 """)
             .build(), false);
     }
@@ -204,29 +227,6 @@ public class SlashCommandListener {
         return reply(event, Embeds.canvas("CanvasMC GitHub")
                 .description("You can find our GitHub organization at https://github.com/CraftCanvasMC")
                 .build());
-    }
-
-    // TODO - purge and split off sub commands
-    private Mono<Void> handleFaq(ChatInputInteractionEvent event) {
-        Faq faq = Faq.fromName(getOption(event, "type"));
-        if (faq == null) {
-            return event.reply("Unknown FAQ type!").withEphemeral(true);
-        }
-
-        String mention = event.getOption("for_user")
-                .flatMap(ApplicationCommandInteractionOption::getValue)
-                .map(val -> "<@" + val.asSnowflake().asString() + "> ")
-                .orElse("");
-
-        InteractionApplicationCommandCallbackSpec.Builder reply = InteractionApplicationCommandCallbackSpec.builder()
-                .addEmbed(faq.toEmbed())
-                .addFile(Embeds.logoAttachment());
-
-        if (!mention.isEmpty()) {
-            reply.content(mention);
-        }
-
-        return event.reply(reply.build());
     }
 
     private Mono<Void> handleOptimizationGuide(ChatInputInteractionEvent event) {
