@@ -90,7 +90,7 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleUnsupportedVer(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.generic("You are running an unsupported version!", 0xFC523F, ":rotating_light:\t")
+        return reply(event, Embeds.generic("You are running an unsupported version!", 0xFC523F, ":rotating_light:  ")
             .description("""
                 Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
                 
@@ -100,7 +100,7 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleSpark(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.generic("Please send a Spark report", 0xFCB03F, ":sparkles:\t")
+        return reply(event, Embeds.generic("Please send a Spark report", 0xFCB03F, ":sparkles:  ")
             .description("""
                 Please send a Spark report and send the link here. If this is a performance issue pertaining to a specific region, please add the following args to the end of your spark profiler command:
                 ```
@@ -114,7 +114,7 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> handleLogs(ChatInputInteractionEvent event) {
-        return reply(event, Embeds.generic("You are running an unsupported version!", 0x3FFC8E, ":rotating_light:\t")
+        return reply(event, Embeds.generic("Please provide logs", 0x3FFC8E, "")
             .description("""
                 In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
                 """)
@@ -186,6 +186,7 @@ public class SlashCommandListener {
                 .build());
     }
 
+    // TODO - purge and split off sub commands
     private Mono<Void> handleFaq(ChatInputInteractionEvent event) {
         Faq faq = Faq.fromName(getOption(event, "type"));
         if (faq == null) {
