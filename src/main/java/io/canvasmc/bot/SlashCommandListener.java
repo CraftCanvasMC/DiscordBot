@@ -32,6 +32,7 @@ public class SlashCommandListener {
             case "git" -> handleGit(event);
             case "faq" -> handleFaq(event);
             case "download" -> handleDownload(event);
+            case "unsupportedver" -> handleUnsupportedVer(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -84,6 +85,19 @@ public class SlashCommandListener {
         return reply(event, Embeds.canvas("About CanvasMC")
                 .description("CanvasMC is a fork of the Folia Minecraft server software that fixes gameplay inconsistencies, bugs, and introduces further performance enhancements to the dedicated server")
                 .build());
+    }
+
+    private Mono<Void> handleUnsupportedVer(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.canvas("You are running an unsupported version!")
+            .description("""
+                Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
+                \n
+                Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running
+                the **latest supported version**.
+                \n
+                You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
+                """)
+            .build());
     }
 
     private Mono<Void> handleWebsite(ChatInputInteractionEvent event) {
