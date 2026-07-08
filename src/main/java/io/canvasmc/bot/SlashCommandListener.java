@@ -113,7 +113,7 @@ public class SlashCommandListener {
                 ```
                 --region <block x> <block z>
                 OR
-                --region <start block x> <start block z> <to block x> <to block z>
+                --region <from bx> <from bz> <to bx> <to bz>
                 ```
                 Using tildas(`~`) works in placement of the block coords. If this is a global performance issue or not a performance issue, the `--region` argument can be left out.
                 """)
