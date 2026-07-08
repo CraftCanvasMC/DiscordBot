@@ -93,9 +93,7 @@ public class SlashCommandListener {
                 Your version of Canvas is based on a Minecraft version we no longer support. Please consider updating **ASAP** to the latest version provided by CanvasMC
                 \n
                 Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running
-                the **latest supported version**.
-                \n
-                You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
+                the **latest supported version**. You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
                 """)
             .build());
     }
