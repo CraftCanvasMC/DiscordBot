@@ -7,6 +7,7 @@ import discord4j.core.object.command.ApplicationCommandInteractionOptionValue;
 import discord4j.core.object.component.ActionRow;
 import discord4j.core.object.component.Button;
 import discord4j.core.spec.EmbedCreateSpec;
+import discord4j.core.spec.InteractionApplicationCommandCallbackReplyMono;
 import discord4j.core.spec.InteractionApplicationCommandCallbackSpec;
 import discord4j.core.spec.MessageCreateFields;
 import io.canvasmc.bot.model.Faq;
@@ -71,9 +72,15 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> reply(ChatInputInteractionEvent event, EmbedCreateSpec embed) {
-        return event.reply()
-                .withEmbeds(embed)
-                .withFiles(Embeds.logoAttachment());
+        return reply(event, embed, true);
+    }
+
+    private Mono<Void> reply(ChatInputInteractionEvent event, EmbedCreateSpec embed, boolean includesThumbnail) {
+        InteractionApplicationCommandCallbackReplyMono initial = event.reply().withEmbeds(embed);
+        if (includesThumbnail) {
+            initial = initial.withFiles(Embeds.logoAttachment());
+        }
+        return initial;
     }
 
     private String getOption(ChatInputInteractionEvent event, String name) {
@@ -96,7 +103,7 @@ public class SlashCommandListener {
                 
                 Older versions may contain numerous bugs and/or exploits or performance issues. Please ensure you are running the **latest supported version**. You can view what versions Canvas provides on our downloads page [here](https://canvasmc.io/downloads/)
                 """)
-            .build());
+            .build(), false);
     }
 
     private Mono<Void> handleSpark(ChatInputInteractionEvent event) {
@@ -110,7 +117,7 @@ public class SlashCommandListener {
                 ```
                 Using tildas(`~`) works in placement of the block coords. If this is a global performance issue or not a performance issue, the `--region` argument can be left out.
                 """)
-            .build());
+            .build(), false);
     }
 
     private Mono<Void> handleLogs(ChatInputInteractionEvent event) {
@@ -118,7 +125,7 @@ public class SlashCommandListener {
             .description("""
                 In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
                 """)
-            .build());
+            .build(), false);
     }
 
     private Mono<Void> handleWebsite(ChatInputInteractionEvent event) {
