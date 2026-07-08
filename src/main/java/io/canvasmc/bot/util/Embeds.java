@@ -26,9 +26,7 @@ public final class Embeds {
     public static EmbedCreateSpec.Builder generic(String title, int color, String append) {
         return EmbedCreateSpec.builder()
             .color(Color.of(color))
-            .thumbnail(LOGO)
-            .title(append + title)
-            .timestamp(Instant.now());
+            .title(append + title);
     }
 
     public static MessageCreateFields.File logoAttachment() {
