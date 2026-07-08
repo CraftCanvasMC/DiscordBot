@@ -10,7 +10,7 @@ import java.time.Instant;
 public final class Embeds {
 
     private static final Color BRAND_COLOR = Color.of(0x34C1FA);
-    private static final String LOGO = "attachment://logo.png";
+    public static final String LOGO = "attachment://logo.png";
 
     private Embeds() {}
 

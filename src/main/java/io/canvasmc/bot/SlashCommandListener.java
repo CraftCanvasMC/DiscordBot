@@ -77,7 +77,9 @@ public class SlashCommandListener {
     }
 
     private Mono<Void> reply(ChatInputInteractionEvent event, EmbedCreateSpec embed, boolean includesThumbnail) {
-        InteractionApplicationCommandCallbackReplyMono initial = event.reply().withEmbeds(embed);
+        InteractionApplicationCommandCallbackReplyMono initial = event.reply().withEmbeds(
+            includesThumbnail ? embed.withThumbnail(Embeds.LOGO) : embed
+        );
         if (includesThumbnail) {
             initial = initial.withFiles(Embeds.logoAttachment());
         }
