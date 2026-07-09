@@ -46,8 +46,6 @@ public class CanvasBot {
             .then()
             .subscribe();
 
-        BuildAnnouncementService.create(client, env).start();
-
         log.info("CanvasMC Bot is now online!");
         client.onDisconnect().block();
     }
