@@ -77,7 +77,7 @@ public class SlashCommandListener {
         return reply(event, embed, true);
     }
 
-    private Mono<Void> reply(ChatInputInteractionEvent event, EmbedCreateSpec embed, boolean includesThumbnail) {
+    private InteractionApplicationCommandCallbackReplyMono reply(ChatInputInteractionEvent event, EmbedCreateSpec embed, boolean includesThumbnail) {
         InteractionApplicationCommandCallbackReplyMono initial = event.reply().withEmbeds(
             includesThumbnail ? embed.withThumbnail(Embeds.LOGO) : embed
         );
@@ -169,7 +169,7 @@ public class SlashCommandListener {
                 
                 To enable the flag, add `-DCanvas.AggressiveChunkSystem` to your JVM flags.
                 """)
-            .build());
+            .build(), false).withFiles(Embeds.logoAttachment());
     }
 
     private Mono<Void> handleFoliaSpread(ChatInputInteractionEvent event) {
