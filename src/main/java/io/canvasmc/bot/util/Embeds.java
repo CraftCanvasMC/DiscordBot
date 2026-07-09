@@ -23,6 +23,14 @@ public final class Embeds {
             .timestamp(Instant.now());
     }
 
+    public static EmbedCreateSpec.Builder canvasNoThumb(String title) {
+        return EmbedCreateSpec.builder()
+            .color(BRAND_COLOR)
+            .title(title)
+            .footer("CanvasMC", LOGO)
+            .timestamp(Instant.now());
+    }
+
     public static EmbedCreateSpec.Builder generic(String title, int color, String append) {
         return EmbedCreateSpec.builder()
             .color(Color.of(color))

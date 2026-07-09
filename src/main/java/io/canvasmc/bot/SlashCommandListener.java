@@ -37,6 +37,7 @@ public class SlashCommandListener {
             case "foliaspread" -> handleFoliaSpread(event);
             case "eta" -> handleEta(event);
             case "schedulers" -> handleSchedulers(event);
+            case "chunksystem" -> handleChunkSystem(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -153,6 +154,24 @@ public class SlashCommandListener {
                 In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
                 """)
             .build(), false);
+    }
+
+    private Mono<Void> handleChunkSystem(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.canvasNoThumb("Canvas' Moonrise Executor Replacement")
+            .description("""
+                Alongside Canvas' other optimizations, Canvas includes a hidden replacement executor for Moonrise, the chunk system for Paper/Folia. This executor is aimed to maximize throughput of chunk tasks as much as possible and is a **lot** more aggressive than Folia/Papers chunk system.
+                
+                ## How do I enable it?
+                The executor is hidden behind a JVM flag by default(`26.1.2+`), to sort of "idiot proof" it, as we don't want servers seeing a configuration option and say "OH OPTIMIZATION = ENABLE IT NOW AND IT GO FAST" because that actually can hurt your server a lot more than help.
+                
+                Given Canvas' replacement executor is more aggressive, this can actually suffocate systems with lower-range hardware in comparison to larger production servers with better higher-end hardware.
+                
+                ### ONLY ENABLE THIS FLAG IF YOU NEED IT AND IF YOUR SERVER IS CONFIGURED TO HANDLE IT
+                Again, this executor is **extremely** aggressive, so please proceed with caution when using it. It will improve CPS a **ton** on a lot of systems, but that does not mean it's going to be beneficial for everyone
+                
+                To enable the flag, add `-DCanvas.AggressiveChunkSystem` to your JVM flags.
+                """)
+            .build());
     }
 
     private Mono<Void> handleFoliaSpread(ChatInputInteractionEvent event) {

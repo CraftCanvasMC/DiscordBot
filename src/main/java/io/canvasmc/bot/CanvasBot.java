@@ -56,7 +56,7 @@ public class CanvasBot {
         try {
             List<String> files = List.of(
                     "about.json", "website.json", "project.json",
-                    "docs.json", "git.json",
+                    "docs.json", "git.json", "chunk_system.json",
                     //"optimizationguide.json",
                     "download.json", "unsupportedver.json", "logs.json",
                     "spark.json", "foliaspread.json", "eta.json", "schedulers.json"
