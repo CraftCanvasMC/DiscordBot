@@ -38,6 +38,7 @@ public class SlashCommandListener {
             case "eta" -> handleEta(event);
             case "schedulers" -> handleSchedulers(event);
             case "chunksystem" -> handleChunkSystem(event);
+            case "coffee" -> handleCoffee(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -152,6 +153,16 @@ public class SlashCommandListener {
         return reply(event, Embeds.generic("Please Provide Logs", 0x3FFC8E, "")
             .description("""
                 In the server folder, locate **`logs/latest.log`** and upload/copy the **FULL** contents to **[mclo.gs](https://mclo.gs/)** and send the URL provided here
+                """)
+            .build(), false);
+    }
+
+    private Mono<Void> handleCoffee(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic(":heart: Donate!", 0xFC2D79, "")
+            .description("""
+                If you want to help support CanvasMCs development, consider donating! It helps us a ton and keeps the project going by funding our hosting and such.
+                
+                If you want to donate, (click here!)[https://ko-fi.com/dueris]
                 """)
             .build(), false);
     }

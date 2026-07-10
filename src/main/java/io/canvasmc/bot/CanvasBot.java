@@ -56,7 +56,7 @@ public class CanvasBot {
                     "about.json", "website.json", "project.json",
                     "docs.json", "git.json", "chunk_system.json",
                     //"optimizationguide.json",
-                    "download.json", "unsupportedver.json", "logs.json",
+                    "download.json", "unsupportedver.json", "logs.json", "coffee.json",
                     "spark.json", "foliaspread.json", "eta.json", "schedulers.json"
             );
             new GlobalCommandRegistrar(client.getRestClient()).registerCommands(files);
