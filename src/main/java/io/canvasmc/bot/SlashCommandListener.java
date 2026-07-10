@@ -162,7 +162,7 @@ public class SlashCommandListener {
             .description("""
                 If you want to help support CanvasMCs development, consider donating! It helps us a ton and keeps the project going by funding our hosting and such.
                 
-                If you want to donate, (click here!)[https://ko-fi.com/dueris]
+                If you want to donate, [click here!](https://ko-fi.com/dueris)
                 """)
             .build(), false);
     }
