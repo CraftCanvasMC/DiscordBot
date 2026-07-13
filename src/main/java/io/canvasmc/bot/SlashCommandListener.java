@@ -39,6 +39,7 @@ public class SlashCommandListener {
             case "schedulers" -> handleSchedulers(event);
             case "chunksystem" -> handleChunkSystem(event);
             case "coffee" -> handleCoffee(event);
+            case "isitcanvas" -> handleIsItCanvas(event);
             //case "optimizationguide" -> handleOptimizationGuide(event);
             default -> Mono.empty();
         };
@@ -115,6 +116,19 @@ public class SlashCommandListener {
         return reply(event, Embeds.generic("No ETA", 0xFC813F, ":bug:  ")
             .description("""
                 Canvas has no ETA(estimated time of arrival) for any Minecraft version updates. It will be worked on ASAP, and the server will be notified once builds become available on our downloads page.
+                """)
+            .build());
+    }
+
+    private Mono<Void> handleIsItCanvas(ChatInputInteractionEvent event) {
+        return reply(event, Embeds.generic("Is it Canvas?", 0xB6ADE6, "<:bugwithagun:1511240925513384016>  ")
+            .description("""
+                The issue you are experiencing could be caused by a large number of things. From plugins, to us, to upstream sources. Please confirm you have done the following to confirm this *is* a Canvas issue:
+                - Have you checked upstream sources? e.g. Folia, Paper, and Vanilla? Is your issue replicatable on there and/or are there open reports about your issue already on their respective issue trackers?
+                - Have you tried without plugins? Not some plugins, not 1 plugin, **0** plugins. Plugins on Folia-based software can cause a *lot* of issues from just 1 tiny thing being wrong. Please ensure your issue is replicatable without plugins
+                - Are your plugins up to date? *If* this is a plugin issue, the author may have already released a fix for it. Please check the respective download pages for your plugins to ensure they are up to date
+                
+                If you can still replicate this on *only* Canvas with **0** plugins, this is most likely a Canvas issue and we are happy to help resolve it. Give us a few days to try and analyze and resolve the issue though, as we work on this in our free time as a hobby, so we may be busy with IRL stuff first.
                 """)
             .build());
     }
