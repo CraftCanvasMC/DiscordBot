@@ -1,4 +1,4 @@
 {
   "name": "isitcanvas",
-  "description": "Displays an embed asking if you have completed all the steps to verifying the users issue in question is infact a Canvas issue"
+  "description": "Is this a Canvas issue?"
 }
